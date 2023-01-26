@@ -17,10 +17,10 @@ private:
         Type type;
         std::string A;
         std::string hint;
-        
+        Exam* examRef;
     public:
         //Default Constructor
-        Question(std::string line);
+        Question(std::string line, Exam* examRef);
         //Copy Constructor
         Question(const Question& source);
         //Move Constructor
@@ -33,7 +33,7 @@ private:
         // Question(); //SA
         // Question(); //LA
     public:
-        void toString();
+        std::string toString();
     };
     int capacity;
     std::vector<std::string>* MCAnswerList;

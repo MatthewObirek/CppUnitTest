@@ -1,21 +1,95 @@
 #include "Exam.hpp"
-
+#include <cstdlib>
+#include <ctime>
 
 //* Question Methods
 //Constructors
 //Default
-Exam::Question::Question(std::string line)
+Exam::Question::Question(std::string line, Exam* examRef)
+    : examRef(examRef)
 {
+    std::string token;
+    std::string del = "; ";
+    size_t pos = 0;
     
+    std::vector<std::string> fields;
+    fields.reserve(5);
+    while((pos = line.find(del)) != std::string::npos)
+    {
+        token = line.substr(0, pos);
+        std::cout << token << std::endl;
+        line.erase(0, pos + del.length());
+        fields.emplace_back(token);
+    }
+
+    if(fields.at(0).compare("MC") == 0) 
+        type = MC;
+    else if (fields.at(0).compare("TF") == 0)
+        type = TF;
+    else 
+        type = SA;
+
+    Q = fields.at(1);
+    A = fields.at(2);
+    hint = fields.at(3);
+
+    std::cout << "\n\nQuestion Created\n\n" << std::endl;
 }
 //Copy
 Exam::Question::Question(const Question& source)
     :Q(source.Q), A(source.A), type(source.type), 
-     hint(source.hint) {}
+     hint(source.hint) 
+{
+    examRef = new Exam(*source.examRef);
+}
 //Move
 Exam::Question::Question(Question&& source)
     :Q(std::move(source.Q)), A(std::move(source.A)), 
-     type(source.type), hint(std::move(source.hint)) {}
+     type(source.type), hint(std::move(source.hint)) 
+{
+    examRef = source.examRef;
+    source.examRef = nullptr;
+}
+
+std::string Exam::Question::toString()
+{
+    std::string str;
+    std::vector<std::string> MCA;
+    MCA.reserve(3);
+    switch(type)
+    {
+    case Type::MC:
+    {       
+        srand(time(0));
+        int correctAnswer = rand()%3;
+        for(int i = 0; i < 3; i++)
+        {
+            if(correctAnswer == i)
+                MCA[correctAnswer] = A; 
+            else
+                MCA[i] = examRef->MCAnswerList->at(rand() % examRef->MCAnswerList->size());
+        }
+        str = Q + "\nHint: " + hint + "\n"
+            + "\ta) " + MCA[0]
+            + "\tb) " + MCA[1]
+            + "\tc) " + MCA[2]; 
+    }
+    break;
+    case Type::TF:
+        str = Q + "\nHint: " + hint + "\n\tTrue or False";
+    break;
+    case Type::SA: str = Q + "\nHint: " + hint;
+    break;
+    case Type::LA: str = Q + "\nHint: " + hint;
+    break;
+    default:
+        str = Q + "\nHint: " + hint; 
+    
+    }
+
+    return str;
+}
+
 
 //Constructors
 Exam::Exam() :Exam(100) {}
@@ -40,47 +114,55 @@ Exam::~Exam()
 void Exam::setCapacity(int capacity)
 {
     this->capacity = capacity;
+    if(QuestionList->size()>capacity)
+    {
+        capacity = QuestionList->size();
+        QuestionList->reserve(capacity);
+        MCAnswerList->reserve(capacity);
+    }
 }
 
-//Builders
+//* Builders
 void Exam::BuildFromFile(std::string filename)
 {
     //! Create Array of Questions
     //Needed Variables
     std::ifstream file(filename);
-    std::vector<Question> Array;
-
+    
     if (file.is_open()) 
     {
         std::string line;
+        int size = 0; 
         while(std::getline(file, line))
         {
-            Question Q(line);
-            Array.push_back(Q);
+            size++;
+            Question Q(line, this);
+            QuestionList->emplace_back(Q);
+            if (Q.type == Question::Type::MC)
+                MCAnswerList->emplace_back(Q.A);
+
+            if (size > (5-capacity))
+                std::cout << "Text Exam is reaching size capacity" << std::endl;
         }
     }
     else
     {
         std::cout << "Unable to open file: " << filename << std::endl;
     }
-
 }
 
-void Exam::BuildFromList(std::vector<Question>& Array)
+/*void Exam::BuildFromList(std::vector<Question>* Array)
 {
-    if(Array.size()>capacity)
-    {
-        capacity = Array.size();
-        QuestionList->reserve(capacity);
-        MCAnswerList->reserve(capacity);
-    }
 
+
+    QuestionList->emplace_back(Array.at(i));
     for (int i = 0; i < Array.size(); i++)
     {
-        QuestionList->emplace_back(Array.at(i));
         if(Array.at(i).type == Question::Type::MC)
         {
             MCAnswerList->emplace_back(Array.at(i).A);
         }
     }
-}
+    std::cout << "Build Complete" << std::endl << "Size of Exam: " << Array.size() << std::endl; 
+    
+}*/

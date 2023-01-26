@@ -10,3 +10,7 @@ Makefile
 out/build
 out/arc
 out/obj
+
+# vscode files
+.vscode
+.vscode/settings.json
