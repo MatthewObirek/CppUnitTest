@@ -6,7 +6,7 @@
 //Default
 Exam::Question::Question(std::string line)
 {
-
+    
 }
 //Copy
 Exam::Question::Question(const Question& source)

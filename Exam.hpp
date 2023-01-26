@@ -28,10 +28,10 @@ private:
         
     private:
         //Type Constructor;
-        Question(); //TF
-        Question(); //MC
-        Question(); //SA
-        Question(); //LA
+        // Question(); //TF
+        // Question(); //MC
+        // Question(); //SA
+        // Question(); //LA
     public:
         void toString();
     };
@@ -42,6 +42,9 @@ public:
     //Constructors
     Exam();
     Exam(int capacity);
+
+    //Destructor
+    ~Exam();
 
     //getters
     inline Question getQuestionAt(int i) { return QuestionList->at(i);}
