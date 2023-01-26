@@ -10,7 +10,5 @@ add_library( Exam
 
 add_executable ( Main "Main.cpp" )
 
-
-
 target_link_libraries( Main 
                         Exam)
