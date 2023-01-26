@@ -1,0 +1,4 @@
+MC; what is this?; A MC question; hint; 
+MC; why is this question here?; to allow for a full example; why do you think?; 
+TF; Is this a MC question?; False; no; 
+MC; What programming language is this written in?; Cplusplus; go and check; 
