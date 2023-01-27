@@ -8,8 +8,9 @@ int main(int args, char** arg)
     std::cout << "you entered this File" <<arg[1] << std::endl;
     Exam exam;
     //* Build exam
-    exam.BuildFromFile(arg[1]);
+    exam.buildFromFile(arg[1]);
     
+    exam.printExam();
     //! Run Test
     //will print and allow answer for each test.
     

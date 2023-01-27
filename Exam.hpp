@@ -25,13 +25,6 @@ private:
         Question(const Question& source);
         //Move Constructor
         Question(Question&& source);
-        
-    private:
-        //Type Constructor;
-        // Question(); //TF
-        // Question(); //MC
-        // Question(); //SA
-        // Question(); //LA
     public:
         std::string toString();
     };
@@ -54,8 +47,10 @@ public:
     void setCapacity(int capacity);
 
     //Builders
-    void BuildFromFile(std::string filename);
-    void BuildFromList(std::vector<Question>& Array);
+    void buildFromFile(std::string filename);
 
+    //Run
+    void printExam();
+    void runExam();
 };
 

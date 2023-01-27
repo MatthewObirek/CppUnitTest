@@ -17,7 +17,6 @@ Exam::Question::Question(std::string line, Exam* examRef)
     while((pos = line.find(del)) != std::string::npos)
     {
         token = line.substr(0, pos);
-        std::cout << token << std::endl;
         line.erase(0, pos + del.length());
         fields.emplace_back(token);
     }
@@ -33,14 +32,14 @@ Exam::Question::Question(std::string line, Exam* examRef)
     A = fields.at(2);
     hint = fields.at(3);
 
-    std::cout << "\n\nQuestion Created\n\n" << std::endl;
+    std::cout << "\nQuestion Created" << std::endl;
 }
 //Copy
 Exam::Question::Question(const Question& source)
     :Q(source.Q), A(source.A), type(source.type), 
      hint(source.hint) 
 {
-    examRef = new Exam(*source.examRef);
+    examRef = source.examRef;
 }
 //Move
 Exam::Question::Question(Question&& source)
@@ -62,17 +61,22 @@ std::string Exam::Question::toString()
     {       
         srand(time(0));
         int correctAnswer = rand()%3;
+        std::cout << correctAnswer << std::endl;
         for(int i = 0; i < 3; i++)
         {
             if(correctAnswer == i)
-                MCA[correctAnswer] = A; 
+            {
+                MCA.emplace_back(A); 
+            }
             else
-                MCA[i] = examRef->MCAnswerList->at(rand() % examRef->MCAnswerList->size());
+            {
+                MCA.emplace_back(examRef->MCAnswerList->at(rand() % examRef->MCAnswerList->size()));
+            }
         }
         str = Q + "\nHint: " + hint + "\n"
-            + "\ta) " + MCA[0]
-            + "\tb) " + MCA[1]
-            + "\tc) " + MCA[2]; 
+            + "\ta) " + MCA[0] + "\n"
+            + "\tb) " + MCA[1] + "\n"
+            + "\tc) " + MCA[2] + "\n"; 
     }
     break;
     case Type::TF:
@@ -91,7 +95,7 @@ std::string Exam::Question::toString()
 }
 
 
-//Constructors
+//*Constructors
 Exam::Exam() :Exam(100) {}
 Exam::Exam(int capacity) : capacity(capacity)
 {
@@ -123,7 +127,7 @@ void Exam::setCapacity(int capacity)
 }
 
 //* Builders
-void Exam::BuildFromFile(std::string filename)
+void Exam::buildFromFile(std::string filename)
 {
     //! Create Array of Questions
     //Needed Variables
@@ -141,28 +145,31 @@ void Exam::BuildFromFile(std::string filename)
             if (Q.type == Question::Type::MC)
                 MCAnswerList->emplace_back(Q.A);
 
-            if (size > (5-capacity))
+            if (size > (capacity-5))
                 std::cout << "Text Exam is reaching size capacity" << std::endl;
         }
     }
     else
     {
         std::cout << "Unable to open file: " << filename << std::endl;
+        return;
     }
+    std::cout << "Exam Created" << std::endl;
+    return;
 }
 
-/*void Exam::BuildFromList(std::vector<Question>* Array)
+//* Run
+void Exam::printExam()
+{
+    for (int i = 0; i < QuestionList->size(); i++)
+    {
+        std::cout << i << ") " << QuestionList->at(i).toString() << std::endl;
+    }
+    return;
+}
+
+void Exam::runExam()
 {
 
 
-    QuestionList->emplace_back(Array.at(i));
-    for (int i = 0; i < Array.size(); i++)
-    {
-        if(Array.at(i).type == Question::Type::MC)
-        {
-            MCAnswerList->emplace_back(Array.at(i).A);
-        }
-    }
-    std::cout << "Build Complete" << std::endl << "Size of Exam: " << Array.size() << std::endl; 
-    
-}*/
+}
