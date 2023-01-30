@@ -74,11 +74,12 @@ std::string Exam::Question::toString(int& mcint)
             }
             else
             {
-                //! Make sure correct answer is not written twice.
+                //* Made sure correct answer is not written twice.
                 int j = -1;
                 do { 
-                    j = rand() % examRef->MCAnswerList->size();
-                } while (examRef->MCAnswerList->at(j).compare(A) == 0);
+                    j = rand() % examRef->MCAnswerList->size();                    
+                } while ((examRef->MCAnswerList->at(j).compare(A) == 0) || compareHelper(j, MCA));
+
                 MCA.emplace_back(examRef->MCAnswerList->at(j));
             }
         }
@@ -117,6 +118,16 @@ std::string Exam::Question::toString(int& mcint)
     return str;
 }
 
+bool Exam::Question::compareHelper(int j , std::vector<std::string>& MCA)
+{
+    for (std::string elem : MCA)
+    {
+        if (elem.compare(examRef->MCAnswerList->at(j)) == 0)
+            return true;
+    }
+    return false;
+}
+
 
 //*Constructors
 Exam::Exam() :Exam(100) {}
@@ -152,7 +163,6 @@ void Exam::setCapacity(int capacity)
 //* Builders
 void Exam::buildFromFile(std::string filename)
 {
-    //! Create Array of Questions
     //Needed Variables
     std::ifstream file(filename);
     
@@ -186,8 +196,7 @@ void Exam::printExam()
 {
     for (int i = 0; i < QuestionList->size(); i++)
     {
-        int mcint = 0;
-        std::cout << i << ") " << QuestionList->at(i).toString(mcint) << std::endl;
+        std::cout << i << ") " << QuestionList->at(i).toString() << std::endl;
     }
     return;
 }

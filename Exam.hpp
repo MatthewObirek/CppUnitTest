@@ -28,6 +28,8 @@ private:
     public:
         std::string toString();
         std::string toString(int& mcint);
+    private:
+        bool compareHelper(int j , std::vector<std::string>& MCA);
     };
     int capacity;
     std::vector<std::string>* MCAnswerList;
