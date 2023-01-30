@@ -13,7 +13,12 @@ add_library( Exam
                 "Exam.hpp"  "Exam.cpp"
                 )
 
+add_library( Log
+                "Log.hpp"   "Log.cpp"
+                )
+
 add_executable ( Main "Main.cpp" )
 
 target_link_libraries( Main 
-                        Exam)
+                        Exam
+                        Log)

@@ -1,4 +1,5 @@
 #include "Exam.hpp"
+#include "Log.hpp"
 #include <cstdlib>
 #include <ctime>
 
@@ -32,7 +33,7 @@ Exam::Question::Question(std::string line, Exam* examRef)
     A = fields.at(2);
     hint = fields.at(3);
 
-    std::cout << "\nQuestion Created" << std::endl;
+    Log("\nQuestion Created");
 }
 //Copy
 Exam::Question::Question(const Question& source)
@@ -40,7 +41,7 @@ Exam::Question::Question(const Question& source)
      hint(source.hint) 
 {
     examRef = source.examRef;
-    std::cout << "\nQuestion Copied" << std::endl;
+    Log("\nQuestion Copied");
 }
 //Move
 Exam::Question::Question(Question&& source)
@@ -49,7 +50,7 @@ Exam::Question::Question(Question&& source)
 {
     examRef = source.examRef;
     source.examRef = nullptr;
-    std::cout << "\nQuestion Moved" << std::endl;
+    Log("\nQuestion Moved");
 }
 
 std::string Exam::Question::toString()
@@ -93,13 +94,12 @@ std::string Exam::Question::toString(int& mcint)
     break;
     case Type::TF:
     {
-        std::cout << A << std::endl;
         if (A.compare("True") == 0)
             mcint = 0;
         else if (A.compare("False") == 0)
             mcint = 1;
         else
-            std::cout << "error" << std::endl;
+            Log("error");
         str = Q + "\nHint: " + hint + "\n\tTrue(0) or False(1)";
     }
     break;
@@ -180,7 +180,7 @@ void Exam::buildFromFile(std::string filename)
                 MCAnswerList->emplace_back(QuestionList->back().A);
 
             if (size > (capacity-5))
-                std::cout << "Text Exam is reaching size capacity" << std::endl;
+                Log("Text Exam is reaching size capacity");
         }
     }
     else
@@ -188,7 +188,7 @@ void Exam::buildFromFile(std::string filename)
         std::cout << "Unable to open file: " << filename << std::endl;
         return;
     }
-    std::cout << "Exam Created" << std::endl;
+    Log("Exam Created");
     return;
 }
 
