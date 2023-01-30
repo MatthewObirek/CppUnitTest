@@ -50,7 +50,7 @@ Exam::Question::Question(Question&& source)
     source.examRef = nullptr;
 }
 
-std::string Exam::Question::toString()
+std::string Exam::Question::toString(int& mcint)
 {
     std::string str;
     std::vector<std::string> MCA;
@@ -60,33 +60,47 @@ std::string Exam::Question::toString()
     case Type::MC:
     {       
         srand(time(0));
-        int correctAnswer = rand()%3;
-        std::cout << correctAnswer << std::endl;
+        mcint = rand()%3;
         for(int i = 0; i < 3; i++)
         {
-            if(correctAnswer == i)
+            if(mcint == i)
             {
                 MCA.emplace_back(A); 
             }
             else
             {
+                //! Make sure correct answer is not written twice.
                 MCA.emplace_back(examRef->MCAnswerList->at(rand() % examRef->MCAnswerList->size()));
             }
         }
         str = Q + "\nHint: " + hint + "\n"
-            + "\ta) " + MCA[0] + "\n"
-            + "\tb) " + MCA[1] + "\n"
-            + "\tc) " + MCA[2] + "\n"; 
+            + "\t(0)a) " + MCA[0] + "\n"
+            + "\t(1)b) " + MCA[1] + "\n"
+            + "\t(2)c) " + MCA[2] + "\n"; 
     }
     break;
     case Type::TF:
-        str = Q + "\nHint: " + hint + "\n\tTrue or False";
+    {
+        std::cout << A << std::endl;
+        if (A.compare("True") == 0)
+            mcint = 0;
+        else if (A.compare("False") == 0)
+            mcint = 1;
+        else
+            std::cout << "error" << std::endl;
+        str = Q + "\nHint: " + hint + "\n\tTrue(0) or False(1)";
+    }
     break;
-    case Type::SA: str = Q + "\nHint: " + hint;
+    case Type::SA: 
+        mcint = -1;
+        str = Q + "\nHint: " + hint;
     break;
-    case Type::LA: str = Q + "\nHint: " + hint;
+    case Type::LA:
+        mcint = -1;
+        str = Q + "\nHint: " + hint;
     break;
     default:
+        mcint == -1;
         str = Q + "\nHint: " + hint; 
     
     }
@@ -163,13 +177,38 @@ void Exam::printExam()
 {
     for (int i = 0; i < QuestionList->size(); i++)
     {
-        std::cout << i << ") " << QuestionList->at(i).toString() << std::endl;
+        int mcint = 0;
+        std::cout << i << ") " << QuestionList->at(i).toString(mcint) << std::endl;
     }
     return;
 }
 
 void Exam::runExam()
 {
-
+    int numCorrect = 0;
+    for (int i = 0; i < QuestionList->size(); i++)
+    {
+        int mcint = 0;
+        int answer = 0;
+        std::cout << i << ") " << QuestionList->at(i).toString(mcint) << std::endl;
+        if (mcint == -1)
+            std::cout << "This is a short or long answer question" << std::endl;
+        else
+        {
+            std::cin >> answer;
+            if(answer == mcint)
+            {
+                numCorrect++;
+                std::cout << "Correct!" << std::endl;
+            }
+            else
+            {
+                std::cout << "Incorrect!" << std::endl;
+            }
+        }
+        
+    }
+    std::cout << numCorrect << " out of " << QuestionList->size() << std::endl;
+    return;
 
 }

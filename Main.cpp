@@ -11,6 +11,8 @@ int main(int args, char** arg)
     exam.buildFromFile(arg[1]);
     
     exam.printExam();
+
+    exam.runExam();
     //! Run Test
     //will print and allow answer for each test.
     
