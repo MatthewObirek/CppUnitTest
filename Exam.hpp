@@ -26,6 +26,7 @@ private:
         //Move Constructor
         Question(Question&& source);
     public:
+        std::string toString();
         std::string toString(int& mcint);
     };
     int capacity;

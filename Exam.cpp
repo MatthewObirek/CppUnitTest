@@ -50,6 +50,11 @@ Exam::Question::Question(Question&& source)
     source.examRef = nullptr;
 }
 
+std::string Exam::Question::toString()
+{
+    int nullnum = 0;
+    return toString(nullnum);
+}
 std::string Exam::Question::toString(int& mcint)
 {
     std::string str;
@@ -70,7 +75,11 @@ std::string Exam::Question::toString(int& mcint)
             else
             {
                 //! Make sure correct answer is not written twice.
-                MCA.emplace_back(examRef->MCAnswerList->at(rand() % examRef->MCAnswerList->size()));
+                int j = -1;
+                do { 
+                    j = rand() % examRef->MCAnswerList->size();
+                } while (examRef->MCAnswerList->at(j).compare(A) == 0);
+                MCA.emplace_back(examRef->MCAnswerList->at(j));
             }
         }
         str = Q + "\nHint: " + hint + "\n"
@@ -206,7 +215,6 @@ void Exam::runExam()
                 std::cout << "Incorrect!" << std::endl;
             }
         }
-        
     }
     std::cout << numCorrect << " out of " << QuestionList->size() << std::endl;
     return;
