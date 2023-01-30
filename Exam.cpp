@@ -40,6 +40,7 @@ Exam::Question::Question(const Question& source)
      hint(source.hint) 
 {
     examRef = source.examRef;
+    std::cout << "\nQuestion Copied" << std::endl;
 }
 //Move
 Exam::Question::Question(Question&& source)
@@ -48,6 +49,7 @@ Exam::Question::Question(Question&& source)
 {
     examRef = source.examRef;
     source.examRef = nullptr;
+    std::cout << "\nQuestion Moved" << std::endl;
 }
 
 std::string Exam::Question::toString()
@@ -173,10 +175,9 @@ void Exam::buildFromFile(std::string filename)
         while(std::getline(file, line))
         {
             size++;
-            Question Q(line, this);
-            QuestionList->emplace_back(Q);
-            if (Q.type == Question::Type::MC)
-                MCAnswerList->emplace_back(Q.A);
+            QuestionList->emplace_back(line, this);
+            if (QuestionList->back().type == Question::Type::MC)
+                MCAnswerList->emplace_back(QuestionList->back().A);
 
             if (size > (capacity-5))
                 std::cout << "Text Exam is reaching size capacity" << std::endl;

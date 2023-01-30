@@ -10,11 +10,8 @@ int main(int args, char** arg)
     //* Build exam
     exam.buildFromFile(arg[1]);
     
-    exam.printExam();
-
-    exam.runExam();
-    //! Run Test
+    //* Run Test
     //will print and allow answer for each test.
-    
+    exam.runExam();
     return 0;
 }
