@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.21.1)
 
 project(CppUnitTest)
 # Add source to this project's executable.
-set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out/build)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out/arc)
